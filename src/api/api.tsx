@@ -12,7 +12,7 @@ const API = () => {
     message: ""
   });
 
-  const baseURL = "http://localhost:5000/api/Fingerprint/scan";
+  const baseURL = "https://localhost:7299/api/fingerprint/scan";
 
   const handleGetRequest = async () => {
     setLoading(true);
@@ -235,7 +235,7 @@ const API = () => {
       }}>
         <h3 style={{ color: "#1976d2", marginBottom: "10px" }}>Instructions:</h3>
         <ul style={{ margin: 0, paddingLeft: "20px", color: "#333" }}>
-          <li>Make sure your server is running on <code>http://localhost:5000</code></li>
+          <li>Make sure your server is running on <code>https://localhost:7299</code></li>
           <li>Click "Send GET Request" to test the GET endpoint</li>
           <li>Fill in the form and click "Send POST Request" to test the POST endpoint</li>
           <li>Check the browser console for additional error details</li>
