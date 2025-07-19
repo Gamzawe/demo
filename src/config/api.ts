@@ -26,10 +26,11 @@ export const createApiInstance = (): AxiosInstance => {
   // Request interceptor for logging and debugging
   instance.interceptors.request.use(
     (config) => {
-      if (ENVIRONMENT === 'development') {
-        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
-        console.log('Request Config:', config);
-      }
+      // Always log in production for debugging
+      console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+      console.log('Environment:', ENVIRONMENT);
+      console.log('Base URL:', API_CONFIG.baseURL);
+      console.log('Request Config:', config);
       return config;
     },
     (error) => {
