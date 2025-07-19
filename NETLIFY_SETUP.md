@@ -5,7 +5,7 @@
 You need to set these environment variables in your Netlify dashboard:
 
 ### 1. Go to Netlify Dashboard
-- Navigate to your site: https://app.netlify.com/sites/demo-arafat
+- Navigate to your site: https://app.netlify.com/sites/demo-2-arafat
 - Go to **Site settings** → **Environment variables**
 
 ### 2. Add These Variables:
