@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { AxiosInstance } from 'axios';
 
 // Environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:7299';

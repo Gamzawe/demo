@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, getApiConfig } from "../config/api";
+import { getApiConfig } from "../config/api";
 import fingerprintService from "../services/fingerprintService";
 
 const API = () => {
