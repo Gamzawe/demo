@@ -1,18 +1,21 @@
-import axios from "axios";
 import { useState } from "react";
+import { api, getApiConfig } from "../config/api";
+import fingerprintService from "../services/fingerprintService";
 
 const API = () => {
   const [getResponse, setGetResponse] = useState<any>(null);
   const [postResponse, setPostResponse] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<{ connected: boolean; message: string } | null>(null);
   const [postData, setPostData] = useState({
     name: "",
     email: "",
     message: ""
   });
 
-  const baseURL = "https://localhost:7299/api/fingerprint/scan";
+  const apiConfig = getApiConfig();
+  const baseURL = `${apiConfig.baseURL}/api/fingerprint/scan`;
 
   const handleGetRequest = async () => {
     setLoading(true);
@@ -20,8 +23,8 @@ const API = () => {
     setGetResponse(null);
 
     try {
-      const response = await axios.get(baseURL);
-      setGetResponse(response.data);
+      const response = await fingerprintService.getScanStatus();
+      setGetResponse(response);
     } catch (err: any) {
       setError(`GET Error: ${err.message}`);
       console.error("GET Error:", err);
@@ -36,11 +39,26 @@ const API = () => {
     setPostResponse(null);
 
     try {
-      const response = await axios.post(baseURL, postData);
-      setPostResponse(response.data);
+      const response = await fingerprintService.scanFingerprint(postData);
+      setPostResponse(response);
     } catch (err: any) {
       setError(`POST Error: ${err.message}`);
       console.error("POST Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTestConnection = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const status = await fingerprintService.testConnection();
+      setConnectionStatus(status);
+    } catch (err: any) {
+      setError(`Connection Test Error: ${err.message}`);
+      console.error("Connection Test Error:", err);
     } finally {
       setLoading(false);
     }
@@ -59,6 +77,52 @@ const API = () => {
       <h1 style={{ textAlign: "center", color: "#333", marginBottom: "30px" }}>
         API Testing Interface
       </h1>
+      
+      {/* API Configuration Display */}
+      <div style={{ 
+        marginBottom: "20px", 
+        padding: "15px", 
+        backgroundColor: "#f0f8ff", 
+        borderRadius: "8px",
+        border: "1px solid #4CAF50"
+      }}>
+        <h3 style={{ color: "#2c5aa0", marginBottom: "10px" }}>API Configuration:</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+          <div><strong>Base URL:</strong> {apiConfig.baseURL}</div>
+          <div><strong>Environment:</strong> {apiConfig.environment}</div>
+          <div><strong>Timeout:</strong> {apiConfig.timeout}ms</div>
+          <div><strong>Endpoint:</strong> {baseURL}</div>
+        </div>
+        
+        <button 
+          onClick={handleTestConnection}
+          disabled={loading}
+          style={{
+            backgroundColor: "#FF9800",
+            color: "white",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: "4px",
+            cursor: loading ? "not-allowed" : "pointer",
+            fontSize: "12px",
+            marginTop: "10px"
+          }}
+        >
+          {loading ? "Testing..." : "Test Connection"}
+        </button>
+        
+        {connectionStatus && (
+          <div style={{ 
+            marginTop: "10px", 
+            padding: "8px", 
+            backgroundColor: connectionStatus.connected ? "#e8f5e8" : "#ffebee",
+            borderRadius: "4px",
+            color: connectionStatus.connected ? "#2e7d32" : "#c62828"
+          }}>
+            <strong>Connection Status:</strong> {connectionStatus.message}
+          </div>
+        )}
+      </div>
       
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
         {/* GET Request Section */}
